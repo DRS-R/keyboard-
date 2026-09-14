@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Onyx Keyboard</string>
+    <string name="ime_name">لوحة مفاتيح Onyx</string>
+    <string name="subtype_ar">العربية</string>
+    <string name="subtype_en">English</string>
+    <string name="subtype_fr">Français</string>
+    <string name="subtype_es">Español</string>
+    <string name="subtype_tr">Türkçe</string>
+    <string name="subtype_de">Deutsch</string>
+    <string name="subtype_ur">اردو</string>
+    <string name="subtype_fa">فارسی</string>
+    <string name="subtype_ru">Русский</string>
+    <string name="settings_title">إعدادات لوحة Onyx</string>
+    <string name="spell_name">مدقق Onyx الإملائي</string>
+</resources>

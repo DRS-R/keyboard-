@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Onyx" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/onyx_accent</item>
+        <item name="colorOnPrimary">@color/onyx_on_accent</item>
+        <item name="colorSurface">@color/onyx_surface</item>
+        <item name="android:statusBarColor">@color/onyx_bg</item>
+        <item name="android:windowBackground">@color/onyx_bg</item>
+    </style>
+
+    <!-- M2: ثيم شفاف لجسر الإدخال الصوتي — يظهر حوار التعرف في النظام فقط -->
+    <style name="Theme.Onyx.Transparent" parent="Theme.Onyx">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+</resources>

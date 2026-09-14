@@ -1,0 +1,1979 @@
+{
+ "version": "0.5.0-m1",
+ "languages": [
+  {
+   "id": "ar",
+   "name": "العربية",
+   "flag": "🇸🇦",
+   "locale": "ar-SA"
+  },
+  {
+   "id": "en",
+   "name": "English",
+   "flag": "🇬🇧",
+   "locale": "en-US"
+  },
+  {
+   "id": "fr",
+   "name": "Français",
+   "flag": "🇫🇷",
+   "locale": "fr-FR"
+  },
+  {
+   "id": "es",
+   "name": "Español",
+   "flag": "🇪🇸",
+   "locale": "es-ES"
+  },
+  {
+   "id": "tr",
+   "name": "Türkçe",
+   "flag": "🇹🇷",
+   "locale": "tr-TR"
+  },
+  {
+   "id": "de",
+   "name": "Deutsch",
+   "flag": "🇩🇪",
+   "locale": "de-DE"
+  },
+  {
+   "id": "ur",
+   "name": "اردو",
+   "flag": "🇵🇰",
+   "locale": "ur-PK"
+  },
+  {
+   "id": "fa",
+   "name": "فارسی",
+   "flag": "🇮🇷",
+   "locale": "fa-IR"
+  },
+  {
+   "id": "ru",
+   "name": "Русский",
+   "flag": "🇷🇺",
+   "locale": "ru-RU"
+  }
+ ],
+ "layouts": {
+  "ar": [
+   [
+    {
+     "char": "ض"
+    },
+    {
+     "char": "ص"
+    },
+    {
+     "char": "ث"
+    },
+    {
+     "char": "ق"
+    },
+    {
+     "char": "ف"
+    },
+    {
+     "char": "غ",
+     "alts": [
+      "غً",
+      "غٌ"
+     ]
+    },
+    {
+     "char": "ع"
+    },
+    {
+     "char": "ه",
+     "alts": [
+      "ة",
+      "ها"
+     ]
+    },
+    {
+     "char": "خ"
+    },
+    {
+     "char": "ح",
+     "alts": [
+      "حً"
+     ]
+    },
+    {
+     "char": "ج",
+     "alts": [
+      "چ"
+     ]
+    },
+    {
+     "char": "د"
+    }
+   ],
+   [
+    {
+     "char": "ش"
+    },
+    {
+     "char": "س"
+    },
+    {
+     "char": "ي",
+     "alts": [
+      "ئ",
+      "ى"
+     ]
+    },
+    {
+     "char": "ب"
+    },
+    {
+     "char": "ل",
+     "alts": [
+      "لا"
+     ]
+    },
+    {
+     "char": "ا",
+     "alts": [
+      "أ",
+      "إ",
+      "آ",
+      "ٱ"
+     ]
+    },
+    {
+     "char": "ت",
+     "alts": [
+      "ة"
+     ]
+    },
+    {
+     "char": "ن"
+    },
+    {
+     "char": "م"
+    },
+    {
+     "char": "ك"
+    },
+    {
+     "char": "ط"
+    }
+   ],
+   [
+    {
+     "char": "ذ"
+    },
+    {
+     "char": "ئ"
+    },
+    {
+     "char": "ء"
+    },
+    {
+     "char": "ؤ"
+    },
+    {
+     "char": "ر"
+    },
+    {
+     "char": "ى"
+    },
+    {
+     "char": "ة"
+    },
+    {
+     "char": "و",
+     "alts": [
+      "ؤ"
+     ]
+    },
+    {
+     "char": "ز"
+    },
+    {
+     "char": "ظ"
+    }
+   ]
+  ],
+  "en": [
+   [
+    {
+     "char": "q"
+    },
+    {
+     "char": "w",
+     "alts": [
+      "ŵ"
+     ]
+    },
+    {
+     "char": "e",
+     "alts": [
+      "è",
+      "é",
+      "ê",
+      "ë",
+      "ẽ"
+     ]
+    },
+    {
+     "char": "r"
+    },
+    {
+     "char": "t",
+     "alts": [
+      "þ"
+     ]
+    },
+    {
+     "char": "y",
+     "alts": [
+      "ÿ"
+     ]
+    },
+    {
+     "char": "u",
+     "alts": [
+      "ù",
+      "ú",
+      "û",
+      "ü"
+     ]
+    },
+    {
+     "char": "i",
+     "alts": [
+      "ì",
+      "í",
+      "î",
+      "ï"
+     ]
+    },
+    {
+     "char": "o",
+     "alts": [
+      "ò",
+      "ó",
+      "ô",
+      "ö",
+      "õ"
+     ]
+    },
+    {
+     "char": "p"
+    }
+   ],
+   [
+    {
+     "char": "a",
+     "alts": [
+      "à",
+      "á",
+      "â",
+      "ä",
+      "ã"
+     ]
+    },
+    {
+     "char": "s",
+     "alts": [
+      "ß",
+      "ś"
+     ]
+    },
+    {
+     "char": "d"
+    },
+    {
+     "char": "f"
+    },
+    {
+     "char": "g"
+    },
+    {
+     "char": "h"
+    },
+    {
+     "char": "j"
+    },
+    {
+     "char": "k"
+    },
+    {
+     "char": "l",
+     "alts": [
+      "ł"
+     ]
+    }
+   ],
+   [
+    {
+     "char": "z"
+    },
+    {
+     "char": "x"
+    },
+    {
+     "char": "c",
+     "alts": [
+      "ç",
+      "ć"
+     ]
+    },
+    {
+     "char": "v"
+    },
+    {
+     "char": "b"
+    },
+    {
+     "char": "n",
+     "alts": [
+      "ñ",
+      "ń"
+     ]
+    },
+    {
+     "char": "m"
+    }
+   ]
+  ],
+  "fr": [
+   [
+    {
+     "char": "a",
+     "alts": [
+      "à",
+      "â",
+      "ä",
+      "á",
+      "ã"
+     ]
+    },
+    {
+     "char": "z"
+    },
+    {
+     "char": "e",
+     "alts": [
+      "é",
+      "è",
+      "ê",
+      "ë"
+     ]
+    },
+    {
+     "char": "r",
+     "alts": [
+      "ŕ"
+     ]
+    },
+    {
+     "char": "t",
+     "alts": [
+      "þ",
+      "ť"
+     ]
+    },
+    {
+     "char": "y",
+     "alts": [
+      "ÿ",
+      "ý"
+     ]
+    },
+    {
+     "char": "u",
+     "alts": [
+      "ù",
+      "û",
+      "ü",
+      "ú"
+     ]
+    },
+    {
+     "char": "i",
+     "alts": [
+      "î",
+      "ï",
+      "í",
+      "ì"
+     ]
+    },
+    {
+     "char": "o",
+     "alts": [
+      "ô",
+      "ö",
+      "ó",
+      "ò",
+      "õ"
+     ]
+    },
+    {
+     "char": "p"
+    }
+   ],
+   [
+    {
+     "char": "q"
+    },
+    {
+     "char": "s",
+     "alts": [
+      "ß",
+      "ś"
+     ]
+    },
+    {
+     "char": "d"
+    },
+    {
+     "char": "f"
+    },
+    {
+     "char": "g"
+    },
+    {
+     "char": "h"
+    },
+    {
+     "char": "j"
+    },
+    {
+     "char": "k"
+    },
+    {
+     "char": "l",
+     "alts": [
+      "ł"
+     ]
+    },
+    {
+     "char": "m"
+    }
+   ],
+   [
+    {
+     "char": "w"
+    },
+    {
+     "char": "x"
+    },
+    {
+     "char": "c",
+     "alts": [
+      "ç",
+      "ć"
+     ]
+    },
+    {
+     "char": "v"
+    },
+    {
+     "char": "b"
+    },
+    {
+     "char": "n"
+    },
+    {
+     "char": "é",
+     "alts": [
+      "è",
+      "ê"
+     ]
+    }
+   ]
+  ],
+  "es": [
+   [
+    {
+     "char": "q"
+    },
+    {
+     "char": "w"
+    },
+    {
+     "char": "e",
+     "alts": [
+      "é",
+      "è",
+      "ê"
+     ]
+    },
+    {
+     "char": "r"
+    },
+    {
+     "char": "t"
+    },
+    {
+     "char": "y",
+     "alts": [
+      "ý",
+      "ÿ"
+     ]
+    },
+    {
+     "char": "u",
+     "alts": [
+      "ú",
+      "ü",
+      "ù",
+      "û"
+     ]
+    },
+    {
+     "char": "i",
+     "alts": [
+      "í",
+      "ì",
+      "î",
+      "ï"
+     ]
+    },
+    {
+     "char": "o",
+     "alts": [
+      "ó",
+      "ò",
+      "ô",
+      "õ",
+      "ö"
+     ]
+    },
+    {
+     "char": "p"
+    }
+   ],
+   [
+    {
+     "char": "a",
+     "alts": [
+      "á",
+      "à",
+      "â",
+      "ã"
+     ]
+    },
+    {
+     "char": "s"
+    },
+    {
+     "char": "d"
+    },
+    {
+     "char": "f"
+    },
+    {
+     "char": "g"
+    },
+    {
+     "char": "h"
+    },
+    {
+     "char": "j"
+    },
+    {
+     "char": "k"
+    },
+    {
+     "char": "l"
+    },
+    {
+     "char": "ñ"
+    }
+   ],
+   [
+    {
+     "char": "z"
+    },
+    {
+     "char": "x"
+    },
+    {
+     "char": "c",
+     "alts": [
+      "ç"
+     ]
+    },
+    {
+     "char": "v"
+    },
+    {
+     "char": "b"
+    },
+    {
+     "char": "n"
+    },
+    {
+     "char": "m"
+    },
+    {
+     "char": "¿"
+    },
+    {
+     "char": "¡"
+    }
+   ]
+  ],
+  "tr": [
+   [
+    {
+     "char": "q"
+    },
+    {
+     "char": "w"
+    },
+    {
+     "char": "e"
+    },
+    {
+     "char": "r"
+    },
+    {
+     "char": "t"
+    },
+    {
+     "char": "y"
+    },
+    {
+     "char": "u",
+     "alts": [
+      "ü"
+     ]
+    },
+    {
+     "char": "ı"
+    },
+    {
+     "char": "o",
+     "alts": [
+      "ö"
+     ]
+    },
+    {
+     "char": "p"
+    }
+   ],
+   [
+    {
+     "char": "a"
+    },
+    {
+     "char": "s"
+    },
+    {
+     "char": "d"
+    },
+    {
+     "char": "f"
+    },
+    {
+     "char": "g"
+    },
+    {
+     "char": "h"
+    },
+    {
+     "char": "j"
+    },
+    {
+     "char": "k"
+    },
+    {
+     "char": "l"
+    },
+    {
+     "char": "ş"
+    },
+    {
+     "char": "i"
+    }
+   ],
+   [
+    {
+     "char": "z"
+    },
+    {
+     "char": "x"
+    },
+    {
+     "char": "c"
+    },
+    {
+     "char": "v"
+    },
+    {
+     "char": "b"
+    },
+    {
+     "char": "n"
+    },
+    {
+     "char": "m"
+    },
+    {
+     "char": "ö"
+    },
+    {
+     "char": "ç"
+    },
+    {
+     "char": "ğ"
+    }
+   ]
+  ],
+  "de": [
+   [
+    {
+     "char": "q"
+    },
+    {
+     "char": "w"
+    },
+    {
+     "char": "e",
+     "alts": [
+      "é",
+      "è"
+     ]
+    },
+    {
+     "char": "r"
+    },
+    {
+     "char": "t"
+    },
+    {
+     "char": "z"
+    },
+    {
+     "char": "u",
+     "alts": [
+      "ù",
+      "ú"
+     ]
+    },
+    {
+     "char": "i"
+    },
+    {
+     "char": "o",
+     "alts": [
+      "ó",
+      "ò"
+     ]
+    },
+    {
+     "char": "p"
+    }
+   ],
+   [
+    {
+     "char": "a",
+     "alts": [
+      "á",
+      "à"
+     ]
+    },
+    {
+     "char": "s"
+    },
+    {
+     "char": "d"
+    },
+    {
+     "char": "f"
+    },
+    {
+     "char": "g"
+    },
+    {
+     "char": "h"
+    },
+    {
+     "char": "j"
+    },
+    {
+     "char": "k"
+    },
+    {
+     "char": "l"
+    },
+    {
+     "char": "ö",
+     "alts": [
+      "œ"
+     ]
+    },
+    {
+     "char": "ä"
+    }
+   ],
+   [
+    {
+     "char": "y"
+    },
+    {
+     "char": "x"
+    },
+    {
+     "char": "c"
+    },
+    {
+     "char": "v"
+    },
+    {
+     "char": "b"
+    },
+    {
+     "char": "n"
+    },
+    {
+     "char": "m"
+    },
+    {
+     "char": "ü"
+    },
+    {
+     "char": "ß",
+     "alts": [
+      "ss"
+     ]
+    }
+   ]
+  ],
+  "ur": [
+   [
+    {
+     "char": "ط"
+    },
+    {
+     "char": "ص"
+    },
+    {
+     "char": "ہ",
+     "alts": [
+      "ۂ",
+      "ۃ"
+     ]
+    },
+    {
+     "char": "د"
+    },
+    {
+     "char": "ٹ"
+    },
+    {
+     "char": "پ"
+    },
+    {
+     "char": "و",
+     "alts": [
+      "ؤ"
+     ]
+    },
+    {
+     "char": "ی",
+     "alts": [
+      "ئ",
+      "ۓ"
+     ]
+    },
+    {
+     "char": "ہ"
+    },
+    {
+     "char": "ر"
+    },
+    {
+     "char": "ڑ"
+    }
+   ],
+   [
+    {
+     "char": "ا",
+     "alts": [
+      "آ",
+      "أ",
+      "إ"
+     ]
+    },
+    {
+     "char": "س"
+    },
+    {
+     "char": "د"
+    },
+    {
+     "char": "ف"
+    },
+    {
+     "char": "گ"
+    },
+    {
+     "char": "ح"
+    },
+    {
+     "char": "ج"
+    },
+    {
+     "char": "ک",
+     "alts": [
+      "کھ"
+     ]
+    },
+    {
+     "char": "ل"
+    },
+    {
+     "char": "ں"
+    },
+    {
+     "char": "؛"
+    }
+   ],
+   [
+    {
+     "char": "ز"
+    },
+    {
+     "char": "ش"
+    },
+    {
+     "char": "چ"
+    },
+    {
+     "char": "ث"
+    },
+    {
+     "char": "ب"
+    },
+    {
+     "char": "ن",
+     "alts": [
+      "ڻ"
+     ]
+    },
+    {
+     "char": "م"
+    },
+    {
+     "char": "ے"
+    },
+    {
+     "char": "ؤ"
+    },
+    {
+     "char": "ء"
+    }
+   ]
+  ],
+  "fa": [
+   [
+    {
+     "char": "ض"
+    },
+    {
+     "char": "ص"
+    },
+    {
+     "char": "ث"
+    },
+    {
+     "char": "ق"
+    },
+    {
+     "char": "ف"
+    },
+    {
+     "char": "غ"
+    },
+    {
+     "char": "ع"
+    },
+    {
+     "char": "ه",
+     "alts": [
+      "ة"
+     ]
+    },
+    {
+     "char": "خ"
+    }
+   ],
+   [
+    {
+     "char": "ش"
+    },
+    {
+     "char": "س"
+    },
+    {
+     "char": "ی",
+     "alts": [
+      "ئ",
+      "ى"
+     ]
+    },
+    {
+     "char": "ب"
+    },
+    {
+     "char": "ل"
+    },
+    {
+     "char": "ا",
+     "alts": [
+      "آ",
+      "أ",
+      "إ"
+     ]
+    },
+    {
+     "char": "ت"
+    },
+    {
+     "char": "ن"
+    },
+    {
+     "char": "م"
+    },
+    {
+     "char": "ک"
+    },
+    {
+     "char": "گ"
+    }
+   ],
+   [
+    {
+     "char": "ظ"
+    },
+    {
+     "char": "ط"
+    },
+    {
+     "char": "ز"
+    },
+    {
+     "char": "ر"
+    },
+    {
+     "char": "ذ"
+    },
+    {
+     "char": "د"
+    },
+    {
+     "char": "پ",
+     "alts": [
+      "چ",
+      "ژ"
+     ]
+    },
+    {
+     "char": "و",
+     "alts": [
+      "ؤ"
+     ]
+    },
+    {
+     "char": "؟"
+    }
+   ]
+  ],
+  "ru": [
+   [
+    {
+     "char": "й"
+    },
+    {
+     "char": "ц"
+    },
+    {
+     "char": "у"
+    },
+    {
+     "char": "к"
+    },
+    {
+     "char": "е"
+    },
+    {
+     "char": "н"
+    },
+    {
+     "char": "г"
+    },
+    {
+     "char": "ш"
+    },
+    {
+     "char": "щ"
+    },
+    {
+     "char": "з"
+    },
+    {
+     "char": "х"
+    }
+   ],
+   [
+    {
+     "char": "ф"
+    },
+    {
+     "char": "ы"
+    },
+    {
+     "char": "в"
+    },
+    {
+     "char": "а"
+    },
+    {
+     "char": "п"
+    },
+    {
+     "char": "р"
+    },
+    {
+     "char": "о"
+    },
+    {
+     "char": "л"
+    },
+    {
+     "char": "д"
+    },
+    {
+     "char": "ж"
+    },
+    {
+     "char": "э"
+    }
+   ],
+   [
+    {
+     "char": "я"
+    },
+    {
+     "char": "ч"
+    },
+    {
+     "char": "с"
+    },
+    {
+     "char": "м"
+    },
+    {
+     "char": "и"
+    },
+    {
+     "char": "т"
+    },
+    {
+     "char": "ь",
+     "alts": [
+      "ъ"
+     ]
+    },
+    {
+     "char": "б"
+    },
+    {
+     "char": "ю"
+    },
+    {
+     "char": "ё"
+    }
+   ]
+  ],
+  "symbols": [
+   [
+    {
+     "char": "1"
+    },
+    {
+     "char": "2"
+    },
+    {
+     "char": "3"
+    },
+    {
+     "char": "4"
+    },
+    {
+     "char": "5"
+    },
+    {
+     "char": "6"
+    },
+    {
+     "char": "7"
+    },
+    {
+     "char": "8"
+    },
+    {
+     "char": "9"
+    },
+    {
+     "char": "0"
+    }
+   ],
+   [
+    {
+     "char": "@"
+    },
+    {
+     "char": "#"
+    },
+    {
+     "char": "$"
+    },
+    {
+     "char": "_"
+    },
+    {
+     "char": "&"
+    },
+    {
+     "char": "-"
+    },
+    {
+     "char": "+"
+    },
+    {
+     "char": "("
+    },
+    {
+     "char": ")"
+    },
+    {
+     "char": "/"
+    }
+   ],
+   [
+    {
+     "char": "!"
+    },
+    {
+     "char": "\""
+    },
+    {
+     "char": "'"
+    },
+    {
+     "char": ":"
+    },
+    {
+     "char": ";"
+    },
+    {
+     "char": "*"
+    },
+    {
+     "char": "="
+    },
+    {
+     "char": "<"
+    },
+    {
+     "char": ">"
+    },
+    {
+     "char": "؟"
+    },
+    {
+     "action": "tashkeel",
+     "label": "تشكيل",
+     "w": 1.35
+    }
+   ]
+  ],
+  "tashkeel": [
+   [
+    {
+     "char": "َ",
+     "label": "ـَ"
+    },
+    {
+     "char": "ُ",
+     "label": "ـُ"
+    },
+    {
+     "char": "ِ",
+     "label": "ـِ"
+    },
+    {
+     "char": "ّ",
+     "label": "ـّ"
+    },
+    {
+     "char": "ْ",
+     "label": "ـْ"
+    },
+    {
+     "char": "ٓ",
+     "label": "ـٓ"
+    },
+    {
+     "char": "ٔ",
+     "label": "ـٔ"
+    },
+    {
+     "char": "ٕ",
+     "label": "ـٕ"
+    }
+   ],
+   [
+    {
+     "char": "ً",
+     "label": "ـً"
+    },
+    {
+     "char": "ٌ",
+     "label": "ـٌ"
+    },
+    {
+     "char": "ٍ",
+     "label": "ـٍ"
+    },
+    {
+     "char": "ـ",
+     "label": "ـ"
+    },
+    {
+     "char": "ٰ",
+     "label": "ـٰ"
+    },
+    {
+     "char": "،"
+    },
+    {
+     "char": "؛"
+    },
+    {
+     "char": "؟"
+    }
+   ],
+   [
+    {
+     "char": "١"
+    },
+    {
+     "char": "٢"
+    },
+    {
+     "char": "٣"
+    },
+    {
+     "char": "٤"
+    },
+    {
+     "char": "٥"
+    },
+    {
+     "char": "٦"
+    },
+    {
+     "char": "٧"
+    },
+    {
+     "char": "٨"
+    },
+    {
+     "char": "٩"
+    },
+    {
+     "char": "٠"
+    }
+   ]
+  ]
+ },
+ "themes": [
+  {
+   "id": "onyx",
+   "name": "أونيكس الليلي",
+   "dark": true,
+   "bg": "#101017",
+   "surface": "#16161f",
+   "key": "#1f1f2b",
+   "keyText": "#eeecf8",
+   "keyAlt": "#2a2a3a",
+   "accent": "#a78bfa",
+   "accentText": "#14101f",
+   "trail": "#a78bfa"
+  },
+  {
+   "id": "pearl",
+   "name": "لؤلؤ الفجر",
+   "dark": false,
+   "bg": "#f3f1f8",
+   "surface": "#faf9fd",
+   "key": "#ffffff",
+   "keyText": "#241a38",
+   "keyAlt": "#e9e4f4",
+   "accent": "#7c3aed",
+   "accentText": "#ffffff",
+   "trail": "#7c3aed"
+  },
+  {
+   "id": "amoled",
+   "name": "أموليد الصافي",
+   "dark": true,
+   "bg": "#000000",
+   "surface": "#050505",
+   "key": "#141414",
+   "keyText": "#f2f2f2",
+   "keyAlt": "#1f1f1f",
+   "accent": "#e879f9",
+   "accentText": "#1a0616",
+   "trail": "#e879f9"
+  },
+  {
+   "id": "sunset",
+   "name": "غروب الشيطان",
+   "dark": true,
+   "bg": "#1c1016",
+   "surface": "#241420",
+   "key": "#331d2c",
+   "keyText": "#ffe9d6",
+   "keyAlt": "#40242f",
+   "accent": "#fb923c",
+   "accentText": "#2a1204",
+   "trail": "#fb7185"
+  },
+  {
+   "id": "jade",
+   "name": "يشم العنقاء",
+   "dark": true,
+   "bg": "#071614",
+   "surface": "#0b1f1c",
+   "key": "#122b27",
+   "keyText": "#d7fff4",
+   "keyAlt": "#1a3833",
+   "accent": "#2dd4bf",
+   "accentText": "#03211c",
+   "trail": "#34d399"
+  },
+  {
+   "id": "gold",
+   "name": "ذهب الصحراء",
+   "dark": true,
+   "bg": "#171106",
+   "surface": "#1e1709",
+   "key": "#2b210c",
+   "keyText": "#f6e9cd",
+   "keyAlt": "#3b2e11",
+   "accent": "#f0b429",
+   "accentText": "#231703",
+   "trail": "#f5c04a"
+  },
+  {
+   "id": "ocean",
+   "name": "أعماق المحيط",
+   "dark": true,
+   "bg": "#041220",
+   "surface": "#071a2c",
+   "key": "#0d2539",
+   "keyText": "#d9f0ff",
+   "keyAlt": "#12324b",
+   "accent": "#38bdf8",
+   "accentText": "#041826",
+   "trail": "#38bdf8"
+  },
+  {
+   "id": "cloud",
+   "name": "غيمة الظهر",
+   "dark": false,
+   "bg": "#edf1f7",
+   "surface": "#f8fafc",
+   "key": "#ffffff",
+   "keyText": "#1e293b",
+   "keyAlt": "#dfe6ee",
+   "accent": "#0ea5e9",
+   "accentText": "#ffffff",
+   "trail": "#0ea5e9"
+  },
+  {
+   "id": "night",
+   "name": "ليل القراءة 🌙",
+   "dark": true,
+   "bg": "#1c1410",
+   "surface": "#241a13",
+   "key": "#2f2218",
+   "keyText": "#f3dfc2",
+   "keyAlt": "#3c2c1e",
+   "accent": "#d4a373",
+   "accentText": "#221404",
+   "trail": "#e0b184"
+  },
+  {
+   "id": "sepia",
+   "name": "سبيا الورق",
+   "dark": false,
+   "bg": "#f4ecd8",
+   "surface": "#faf6ea",
+   "key": "#fffdf5",
+   "keyText": "#4a3b28",
+   "keyAlt": "#e8dcc0",
+   "accent": "#a0672d",
+   "accentText": "#fffdf5",
+   "trail": "#b07a3c"
+  },
+  {
+   "id": "rose",
+   "name": "وردة الفجر",
+   "dark": false,
+   "bg": "#fdf2f4",
+   "surface": "#fff8fa",
+   "key": "#ffffff",
+   "keyText": "#3d2028",
+   "keyAlt": "#f7dfe4",
+   "accent": "#e11d48",
+   "accentText": "#ffffff",
+   "trail": "#f43f5e"
+  },
+  {
+   "id": "mint",
+   "name": "نعناع الصباح",
+   "dark": false,
+   "bg": "#ecfdf5",
+   "surface": "#f7fef9",
+   "key": "#ffffff",
+   "keyText": "#134e39",
+   "keyAlt": "#d1fae5",
+   "accent": "#059669",
+   "accentText": "#ffffff",
+   "trail": "#10b981"
+  },
+  {
+   "id": "mono",
+   "name": "حبر أسود",
+   "dark": true,
+   "bg": "#111111",
+   "surface": "#181818",
+   "key": "#222222",
+   "keyText": "#e5e5e5",
+   "keyAlt": "#2e2e2e",
+   "accent": "#fafafa",
+   "accentText": "#111111",
+   "trail": "#d4d4d4"
+  },
+  {
+   "id": "cyber",
+   "name": "سايبر نيون",
+   "dark": true,
+   "bg": "#0a0f14",
+   "surface": "#0e141b",
+   "key": "#132029",
+   "keyText": "#d9fdff",
+   "keyAlt": "#1a2c38",
+   "accent": "#22d3ee",
+   "accentText": "#04181c",
+   "trail": "#2dd4bf"
+  }
+ ],
+ "templates": [
+  {
+   "id": "onyx",
+   "name": "أونيكس الكلاسيك",
+   "radius": 10,
+   "gap": 5,
+   "shadow": "soft",
+   "glass": false,
+   "outline": false,
+   "preview": "rounded-[10px]"
+  },
+  {
+   "id": "bubbly",
+   "name": "فقاعي",
+   "radius": 21,
+   "gap": 7,
+   "shadow": "soft",
+   "glass": false,
+   "outline": false,
+   "preview": "rounded-[21px]"
+  },
+  {
+   "id": "minimal",
+   "name": "حد أدنى",
+   "radius": 3,
+   "gap": 4,
+   "shadow": "none",
+   "glass": false,
+   "outline": false,
+   "preview": "rounded-[3px]"
+  },
+  {
+   "id": "glass",
+   "name": "زجاجي",
+   "radius": 14,
+   "gap": 6,
+   "shadow": "soft",
+   "glass": true,
+   "outline": true,
+   "preview": "backdrop-blur"
+  },
+  {
+   "id": "neumorph",
+   "name": "نيومورف",
+   "radius": 12,
+   "gap": 7,
+   "shadow": "inset",
+   "glass": false,
+   "outline": false,
+   "preview": "inset-shadow"
+  },
+  {
+   "id": "retro",
+   "name": "ريترو",
+   "radius": 2,
+   "gap": 3,
+   "shadow": "deep",
+   "glass": false,
+   "outline": true,
+   "preview": "hard-shadow"
+  },
+  {
+   "id": "luxury",
+   "name": "فخم ذهبي",
+   "radius": 8,
+   "gap": 5,
+   "shadow": "deep",
+   "glass": false,
+   "outline": true,
+   "preview": "gold-ring"
+  },
+  {
+   "id": "pill",
+   "name": "كبسولة",
+   "radius": 999,
+   "gap": 6,
+   "shadow": "none",
+   "glass": false,
+   "outline": false,
+   "preview": "rounded-full"
+  }
+ ],
+ "emojiGroups": [
+  {
+   "name": "وجوه",
+   "emojis": [
+    "😀",
+    "😁",
+    "😂",
+    "🤣",
+    "😊",
+    "😍",
+    "🤩",
+    "😎",
+    "🤔",
+    "😉",
+    "😢",
+    "😭",
+    "😡",
+    "🥳",
+    "😱",
+    "😈",
+    "🤯",
+    "🥰",
+    "😴",
+    "🤖"
+   ]
+  },
+  {
+   "name": "إشارات",
+   "emojis": [
+    "👍",
+    "👎",
+    "👏",
+    "🙌",
+    "🤝",
+    "✌️",
+    "🤞",
+    "💪",
+    "🙏",
+    "👆",
+    "🔥",
+    "⭐",
+    "✨",
+    "💯",
+    "⚡",
+    "🎉",
+    "🏆",
+    "🚀",
+    "💎",
+    "👑"
+   ]
+  },
+  {
+   "name": "حيوانات",
+   "emojis": [
+    "🐱",
+    "🐶",
+    "🦁",
+    "🐼",
+    "🐸",
+    "🦊",
+    "🐻",
+    "🐨",
+    "🐯",
+    "🦉",
+    "🦋",
+    "🐢",
+    "🐙",
+    "🦄",
+    "🌸",
+    "🌵",
+    "🌴",
+    "🌙",
+    "☀️",
+    "🌈"
+   ]
+  },
+  {
+   "name": "طعام",
+   "emojis": [
+    "☕",
+    "🍕",
+    "🍫",
+    "🍓",
+    "🍉",
+    "🍔",
+    "🍟",
+    "🍩",
+    "🍰",
+    "🥤",
+    "🍗",
+    "🥗",
+    "🍯",
+    "🧁",
+    "🍿",
+    "🌮",
+    "🥐",
+    "🫒",
+    "🥛",
+    "🍵"
+   ]
+  },
+  {
+   "name": "أنشطة",
+   "emojis": [
+    "⚽",
+    "🏀",
+    "🎮",
+    "🎧",
+    "📚",
+    "🎯",
+    "🎲",
+    "🎸",
+    "🎹",
+    "🚴",
+    "🏊",
+    "🏆",
+    "🎳",
+    "🎤",
+    "🎨",
+    "🧩",
+    "♟️",
+    "🛹",
+    "🎿",
+    "🥊"
+   ]
+  },
+  {
+   "name": "سفر",
+   "emojis": [
+    "🚗",
+    "✈️",
+    "🚀",
+    "🚢",
+    "🗺️",
+    "🏝️",
+    "🏔️",
+    "🗼",
+    "🗽",
+    "🕌",
+    "🕋",
+    "🎡",
+    "🏥",
+    "🏦",
+    "🏫",
+    "🚂",
+    "🛴",
+    "🚁",
+    "⛵",
+    "🛰️"
+   ]
+  },
+  {
+   "name": "أشياء",
+   "emojis": [
+    "📱",
+    "💻",
+    "⌚",
+    "📷",
+    "🔋",
+    "🔑",
+    "💡",
+    "🛒",
+    "🎁",
+    "💼",
+    "✏️",
+    "📌",
+    "🔒",
+    "🧠",
+    "🤖",
+    "🪄",
+    "🧸",
+    "🧿",
+    "💸",
+    "🛠️"
+   ]
+  },
+  {
+   "name": "رموز",
+   "emojis": [
+    "❤️",
+    "🧡",
+    "💛",
+    "💚",
+    "💙",
+    "💜",
+    "🖤",
+    "🤍",
+    "💯",
+    "✅",
+    "❌",
+    "❗",
+    "❓",
+    "💤",
+    "🔥",
+    "✨",
+    "🎉",
+    "🎊",
+    "♻️",
+    "⚠️"
+   ]
+  }
+ ],
+ "decorSnippets": [
+  "﴿ ﴾",
+  "«»",
+  "【】",
+  "❰❱",
+  "╔═╗║╚╝",
+  "━━━━━━━",
+  "✦✧✦",
+  "❖ ❖",
+  "彡 日 彡",
+  "▁ ▂ ▃ ▅ ▆ ▇",
+  "⌜⌝⌞⌟",
+  "┊ ┊ ┊",
+  "•°• ∞ •°•",
+  "✿°•∘ɷ∘•°✿"
+ ],
+ "kaomoji": [
+  {
+   "mood": "pos",
+   "name": "سعيد",
+   "items": [
+    "(◕‿◕)",
+    "(｡◕‿◕｡)",
+    "(✿◠‿◠)",
+    "(◡‿◡✿)",
+    "(◕ᴗ◕✿)",
+    "(✬´s¿`✬)",
+    "٩(◕‿◕)۶",
+    "(＾▽＾)",
+    "(｡♥‿♥｡)",
+    "(☆▽☆)",
+    "(≧◡≦)",
+    "ヽ(♡‿♡)ノ"
+   ]
+  },
+  {
+   "mood": "neg",
+   "name": "حزين",
+   "items": [
+    "(╥﹏╥)",
+    "(ಥ﹏ಥ)",
+    "(っ˘̩╭╮˘̩)っ",
+    "(◕︿◕✿)",
+    "(＞﹏＜)",
+    "(T▽T)",
+    "(ㅇㅁㅇ)",
+    "(－‸ლ)",
+    "(⊙_⊙)",
+    "┌(。Д。)┐"
+   ]
+  },
+  {
+   "mood": "neu",
+   "name": "محايد",
+   "items": [
+    "(¬‿¬)",
+    "(¬_¬)",
+    "ಠ_ಠ",
+    "(͡° ͜ʖ ͡°)",
+    "ʕ•ᴥ•ʔ",
+    "(^-^*)",
+    "(·_·)",
+    "(o_o)",
+    "(ᵔᴥᵔ)",
+    "▓▒░(°◡°)░▒▓",
+    "¯\\_(ツ)_/¯",
+    "(⊙﹏⊙)"
+   ]
+  }
+ ],
+ "fontOptions": [
+  {
+   "id": "system",
+   "name": "النظام",
+   "families": "sans-serif"
+  },
+  {
+   "id": "condensed",
+   "name": "مضغوط",
+   "families": "sans-serif-condensed"
+  },
+  {
+   "id": "medium",
+   "name": "متوسط",
+   "families": "sans-serif-medium"
+  },
+  {
+   "id": "serif",
+   "name": "سيريف",
+   "families": "serif"
+  },
+  {
+   "id": "monospace",
+   "name": "برمجي",
+   "families": "monospace"
+  },
+  {
+   "id": "smallcaps",
+   "name": "أحرف ضيقة",
+   "families": "sans-serif-smallcaps"
+  },
+  {
+   "id": "thin",
+   "name": "رفيع",
+   "families": "sans-serif-thin"
+  },
+  {
+   "id": "black",
+   "name": "ثقيل",
+   "families": "sans-serif-black"
+  }
+ ]
+}

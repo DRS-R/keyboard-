@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="onyx_bg">#101017</color>
+    <color name="onyx_surface">#16161f</color>
+    <color name="onyx_accent">#A78BFA</color>
+    <color name="onyx_on_accent">#14101F</color>
+    <color name="ic_launcher_bg">#101017</color>
+</resources>

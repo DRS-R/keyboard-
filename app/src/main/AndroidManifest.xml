@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- صفر أذونات: لا إنترنت ولا مايك ولا حافظة نظام — عقد الخصوصية Architecture-level -->
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Onyx">
+
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- M2: جسر الإدخال الصوتي — تفويض نظامي بصلاحيات صفرية (لا RECORD_AUDIO) -->
+        <activity
+            android:name=".ui.VoiceBridgeActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:theme="@style/Theme.Onyx.Transparent" />
+
+        <service
+            android:name=".ime.OnyxImeService"
+            android:exported="true"
+            android:label="@string/ime_name"
+            android:permission="android.permission.BIND_INPUT_METHOD">
+            <intent-filter>
+                <action android:name="android.view.InputMethod" />
+            </intent-filter>
+            <meta-data
+                android:name="android.view.im"
+                android:resource="@xml/method" />
+        </service>
+
+        <!-- M3: المصحح اللغوي النظامي — نواة Onyx تدقق لكل تطبيقات الجهاز -->
+        <service
+            android:name=".spell.OnyxSpellCheckerService"
+            android:exported="true"
+            android:label="@string/spell_name"
+            android:permission="android.permission.BIND_TEXT_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.textservice.SpellCheckerService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.view.textservice"
+                android:resource="@xml/spellchecker" />
+        </service>
+    </application>
+
+</manifest>

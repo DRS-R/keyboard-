@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- المصحح اللغوي النظامي — نفس لغات اللوحة التسع -->
+<spell-checker xmlns:android="http://schemas.android.com/apk/res/android"
+    android:label="@string/spell_name">
+    <subtype android:label="@string/subtype_ar" android:subtypeLocale="ar" />
+    <subtype android:label="@string/subtype_en" android:subtypeLocale="en_US" />
+    <subtype android:label="@string/subtype_fr" android:subtypeLocale="fr_FR" />
+    <subtype android:label="@string/subtype_es" android:subtypeLocale="es_ES" />
+    <subtype android:label="@string/subtype_tr" android:subtypeLocale="tr_TR" />
+    <subtype android:label="@string/subtype_de" android:subtypeLocale="de_DE" />
+    <subtype android:label="@string/subtype_ur" android:subtypeLocale="ur_PK" />
+    <subtype android:label="@string/subtype_fa" android:subtypeLocale="fa_IR" />
+    <subtype android:label="@string/subtype_ru" android:subtypeLocale="ru_RU" />
+</spell-checker>

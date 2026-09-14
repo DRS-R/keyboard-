@@ -1,0 +1,6 @@
+{
+  "name": "Onyx Keyboard",
+  "description": "لوحة مفاتيح Onyx الذكية بمحرك C++ أصلي ودعم الكتابة الذكية والمصحح اللغوي والقواعدي واللوحة العائمة",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
