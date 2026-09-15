@@ -1,7 +1,9 @@
 package com.onyx.keyboard.ui
 
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -19,6 +21,8 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.WindowCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.materialswitch.MaterialSwitch
@@ -28,7 +32,11 @@ import com.onyx.keyboard.ime.Decor
 import com.onyx.keyboard.ime.FloatingController
 import com.onyx.keyboard.ime.OnyxImeService
 import com.onyx.keyboard.model.OnyxAssets
+import com.onyx.keyboard.ui.AppColorScheme
+import com.onyx.keyboard.ui.AppUiTheme
 import com.onyx.keyboard.ui.MaterialYou
+import com.onyx.keyboard.util.ClipboardUrlDetector
+import com.onyx.keyboard.util.DownloadUrlValidator
 
 /**
  * MainActivity — واجهة الإعدادات الكاملة (Material 3 برمجي)
@@ -39,6 +47,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var prefs: Prefs
     private lateinit var onyxAssets: OnyxAssets
+    private lateinit var colorScheme: AppColorScheme
+    private var wallpaperListener: Any? = null
     private val density by lazy { resources.displayMetrics.density }
     private fun dp(v: Float) = v * density
     private fun dp(v: Int) = v * density
@@ -46,6 +56,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var statusText: TextView
     private lateinit var statsText: TextView
     private lateinit var profileRow: LinearLayout
+
+    // رصد رابط الحافظة التلقائي وحقل إدخال الرابط
+    private var lastPrefilledUrl: String? = null
+    private lateinit var urlInputField: EditText
+    private lateinit var urlStatusText: TextView
+    private lateinit var clipboardDetectedBadge: LinearLayout
+    private lateinit var clipboardBadgeText: TextView
 
     /* M3: تصدير/استيراد القاموس المتعلم عبر SAF — صلاحيات صفرية */
     private val exportDict =
@@ -104,7 +121,19 @@ class MainActivity : AppCompatActivity() {
         try {
             prefs = Prefs(this)
             onyxAssets = OnyxAssets(this.assets)
+            applyAppNightMode(prefs.appThemeMode)
+            colorScheme = AppUiTheme.resolve(this, prefs.appThemeMode, prefs.appDynamicColor)
             setContentView(buildUi())
+            window.decorView.post {
+                detectAndPrefillClipboardUrl()
+            }
+            if (MaterialYou.supported()) {
+                wallpaperListener = MaterialYou.listen(this) {
+                    if (prefs.appDynamicColor) {
+                        rebuildUi()
+                    }
+                }
+            }
         } catch (t: Throwable) {
             android.util.Log.e("OnyxMainActivity", "Error during onCreate", t)
             val scroll = ScrollView(this)
@@ -133,19 +162,71 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (wallpaperListener is android.app.WallpaperManager.OnColorsChangedListener) {
+            MaterialYou.stopListening(this, wallpaperListener as android.app.WallpaperManager.OnColorsChangedListener)
+        }
+    }
+
+    private fun applyAppNightMode(themeMode: Int) {
+        val targetMode = when (themeMode) {
+            Prefs.THEME_MODE_LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+            Prefs.THEME_MODE_DARK -> AppCompatDelegate.MODE_NIGHT_YES
+            else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        }
+        if (AppCompatDelegate.getDefaultNightMode() != targetMode) {
+            AppCompatDelegate.setDefaultNightMode(targetMode)
+        }
+    }
+
+    private fun setAppThemeMode(mode: Int) {
+        prefs.appThemeMode = mode
+        applyAppNightMode(mode)
+        rebuildUi()
+    }
+
+    private fun setAppDynamicColor(enabled: Boolean) {
+        prefs.appDynamicColor = enabled
+        rebuildUi()
+    }
+
+    private fun rebuildUi() {
+        val currentUrl = if (::urlInputField.isInitialized) urlInputField.text.toString() else null
+        colorScheme = AppUiTheme.resolve(this, prefs.appThemeMode, prefs.appDynamicColor)
+        setContentView(buildUi(currentUrl))
+        refreshStatus()
+        refreshStats()
+        refreshProfileRow()
+    }
+
     override fun onResume() {
         super.onResume()
         try {
             refreshStatus()
             refreshStats()
             refreshProfileRow()
+            window.decorView.post {
+                detectAndPrefillClipboardUrl()
+            }
         } catch (e: Throwable) {
             android.util.Log.e("OnyxMainActivity", "Error during onResume", e)
         }
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            detectAndPrefillClipboardUrl()
+        }
+    }
+
     /* ================= بناء الواجهة ================= */
-    private fun buildUi(): View {
+    private fun buildUi(initialUrl: String? = null): View {
+        colorScheme = AppUiTheme.resolve(this, prefs.appThemeMode, prefs.appDynamicColor)
+        window.statusBarColor = colorScheme.background
+        WindowCompat.getInsetsController(window, window.decorView)?.isAppearanceLightStatusBars = !colorScheme.isDark
+
         val col = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(14f).toInt(), dp(18f).toInt(), dp(14f).toInt(), dp(28f).toInt())
@@ -156,18 +237,66 @@ class MainActivity : AppCompatActivity() {
             text = "⌨ لوحة مفاتيح Onyx"
             textSize = 24f
             typeface = Typeface.create("sans-serif-black", Typeface.NORMAL)
-            setTextColor(Color.rgb(238, 236, 248))
+            setTextColor(colorScheme.textPrimary)
         })
         col.addView(TextView(this).apply {
             text = "v0.7.5 — Legend Deep (Kotlin + C++) · Milestone 3+"
             textSize = 12f
-            setTextColor(Color.rgb(167, 139, 250))
+            setTextColor(colorScheme.primary)
             setPadding(0, dp(2f).toInt(), 0, dp(12f).toInt())
+        })
+
+        // مظهر واجهة التطبيق — الألوان الديناميكية والوضع الفاتح/الداكن
+        col.addView(section("مظهر التطبيق — الألوان والوضع الليلي 🎨") {
+            val mySupported = MaterialYou.supported()
+            addView(switchRow(
+                if (mySupported) "الألوان الديناميكية — Material You 🎨"
+                else "الألوان الديناميكية 🎨 (يتطلب أندرويد 12+)",
+                { prefs.appDynamicColor },
+                { enabled -> setAppDynamicColor(enabled) },
+                if (mySupported) "استخراج لوحة الألوان تلقائياً من خلفية جهازك وتطبيقها على واجهة التطبيق"
+                else "غير مدعوم على إصدار نظامك الحالي — يتم استخدام ألوان Onyx البنفسجية"
+            ).apply {
+                if (!mySupported) {
+                    alpha = 0.5f
+                    isEnabled = false
+                }
+            })
+            if (mySupported && prefs.appDynamicColor) {
+                addView(swatchesRow())
+            }
+            addView(switchRow(
+                "الوضع الداكن 🌙",
+                { colorScheme.isDark },
+                { isDark ->
+                    setAppThemeMode(if (isDark) Prefs.THEME_MODE_DARK else Prefs.THEME_MODE_LIGHT)
+                },
+                if (colorScheme.isDark) "الوضع الداكن نشط حالياً — مريح للعين وموفر للطاقة"
+                else "الوضع الفاتح نشط حالياً — ألوان مشرقة وتباين عالي"
+            ))
+            addView(miniLabel("التحكم في نمط العرض"))
+            addView(chipScroller(
+                listOf("⚙️ تلقائي (مع النظام)", "☀️ وضع فاتح", "🌙 وضع داكن"),
+                { i -> prefs.appThemeMode == i },
+                { i -> setAppThemeMode(i) }
+            ))
+            addView(TextView(this@MainActivity).apply {
+                val modeDesc = when (prefs.appThemeMode) {
+                    Prefs.THEME_MODE_LIGHT -> "الوضع الثابت: ☀️ فاتح دائماً"
+                    Prefs.THEME_MODE_DARK -> "الوضع الثابت: 🌙 داكن دائماً"
+                    else -> "الوضع التلقائي: ⚙️ يتبع إعدادات النظام (" + (if (colorScheme.isDark) "حالياً داكن 🌙" else "حالياً فاتح ☀️") + ")"
+                }
+                val dynamicDesc = if (prefs.appDynamicColor && mySupported) " · الألوان: ديناميكية (Material You)" else " · الألوان: كلاسيكية (Onyx Violet)"
+                text = "$modeDesc$dynamicDesc"
+                textSize = 11.5f
+                setTextColor(colorScheme.textSecondary)
+                setPadding(dp(4f).toInt(), dp(4f).toInt(), 0, dp(4f).toInt())
+            })
         })
 
         // الحالة
         col.addView(section("تفعيل اللوحة") {
-            statusText = TextView(ctx).apply { textSize = 14f }
+            statusText = TextView(ctx).apply { textSize = 14f; setTextColor(colorScheme.textPrimary) }
             addView(statusText)
             addView(buttonRow(
                 button("تمكين في إعدادات النظام") {
@@ -183,10 +312,12 @@ class MainActivity : AppCompatActivity() {
                 inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
                 minLines = 2
                 textSize = 15f
+                setTextColor(colorScheme.textPrimary)
+                setHintTextColor(colorScheme.textSecondary)
                 setPadding(dp(12f).toInt(), dp(10f).toInt(), dp(12f).toInt(), dp(10f).toInt())
                 
                 background = GradientDrawable().apply {
-                    setColor(Color.argb(30, 128, 128, 128))
+                    setColor(colorScheme.inputBackground)
                     cornerRadius = dp(12f)
                 }
             })
@@ -296,6 +427,9 @@ class MainActivity : AppCompatActivity() {
             ))
         })
 
+        // M3: استيراد وتنزيل القواميس عبر رابط (URL) مع الكشف التلقائي من الحافظة
+        col.addView(urlImportSection(initialUrl))
+
         // M2 Nova — الوسائط والذاكرة
         col.addView(section("تجربة Nova — M2") {
             addView(switchRow("أصوات المفاتيح 🔊", { prefs.soundEnabled }, { prefs.soundEnabled = it }))
@@ -323,6 +457,7 @@ class MainActivity : AppCompatActivity() {
             addView(TextView(ctx).apply {
                 textSize = 14f
                 text = Decor.STYLES.take(6).joinToString(" · ") { it.preview }
+                setTextColor(colorScheme.textPrimary)
             })
         })
 
@@ -335,13 +470,13 @@ class MainActivity : AppCompatActivity() {
                     "M2 Nova: قواميس 6000 كلمة × 9 لغات، إيموجي سياقي، لوحة إيموجي بالبحث، حافظة تاريخية، إدخال صوتي، أصوات مفاتيح، وطبقة تشكيل.\n" +
                     "صلاحيات التطبيق: صفر — لا إنترنت ولا مايك ولا SYSTEM_ALERT_WINDOW. كل شيء يعمل محلياً.\n" +
                     "معمارية: Kotlin (IME/واجهة/مصحح) + C++ (الذكاء) — نفس خارطة المشروع الأصلية."
-                setTextColor(Color.argb(210, 255, 255, 255))
+                setTextColor(colorScheme.textSecondary)
             })
         })
 
         return ScrollView(this).apply {
             addView(col)
-            background = GradientDrawable().apply { setColor(Color.parseColor("#101017")) }
+            background = GradientDrawable().apply { setColor(colorScheme.background) }
         }
     }
 
@@ -351,9 +486,9 @@ class MainActivity : AppCompatActivity() {
     private fun section(title: String, builder: SectionBuilder.() -> Unit): MaterialCardView {
         val card = MaterialCardView(this).apply {
             radius = dp(16f)
-            setCardBackgroundColor(Color.parseColor("#16161f"))
-            strokeWidth = 1
-            strokeColor = Color.argb(40, 167, 139, 250)
+            setCardBackgroundColor(colorScheme.cardBackground)
+            strokeWidth = dp(1f).toInt().coerceAtLeast(1)
+            strokeColor = colorScheme.cardStroke
             useCompatPadding = true
         }
         val inner = SectionBuilder(this)
@@ -363,7 +498,7 @@ class MainActivity : AppCompatActivity() {
             text = title
             textSize = 15f
             typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
-            setTextColor(Color.rgb(167, 139, 250))
+            setTextColor(colorScheme.primary)
             setPadding(0, 0, 0, dp(8f).toInt())
         })
         inner.builder()
@@ -380,6 +515,9 @@ class MainActivity : AppCompatActivity() {
             text = label
             textSize = 13f
             isAllCaps = false
+            setTextColor(colorScheme.onPrimary)
+            backgroundTintList = ColorStateList.valueOf(colorScheme.primary)
+            cornerRadius = dp(12f).toInt()
             setOnClickListener { onClick() }
             val lp = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             lp.marginEnd = dp(6f).toInt()
@@ -394,22 +532,51 @@ class MainActivity : AppCompatActivity() {
     private fun miniLabel(text: String): TextView = TextView(this).apply {
         this.text = text
         textSize = 12f
-        alpha = 0.75f
+        setTextColor(colorScheme.textSecondary)
         setPadding(0, dp(6f).toInt(), 0, dp(4f).toInt())
     }
 
-    private fun switchRow(label: String, get: () -> Boolean, set: (Boolean) -> Unit): View =
+    private fun switchRow(
+        label: String,
+        get: () -> Boolean,
+        set: (Boolean) -> Unit,
+        subtitle: String? = null,
+    ): View =
         LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             setPadding(0, dp(6f).toInt(), 0, dp(6f).toInt())
-            addView(TextView(this@MainActivity).apply {
-                text = label
-                textSize = 14f
+            val textCol = LinearLayout(this@MainActivity).apply {
+                orientation = LinearLayout.VERTICAL
                 layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-            })
+                addView(TextView(this@MainActivity).apply {
+                    text = label
+                    textSize = 14f
+                    setTextColor(colorScheme.textPrimary)
+                })
+                if (!subtitle.isNullOrBlank()) {
+                    addView(TextView(this@MainActivity).apply {
+                        text = subtitle
+                        textSize = 11.5f
+                        setTextColor(colorScheme.textSecondary)
+                        setPadding(0, dp(2f).toInt(), dp(6f).toInt(), 0)
+                    })
+                }
+            }
+            addView(textCol)
             addView(MaterialSwitch(this@MainActivity).apply {
                 isChecked = get()
+                thumbTintList = ColorStateList(
+                    arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
+                    intArrayOf(colorScheme.primary, colorScheme.divider)
+                )
+                trackTintList = ColorStateList(
+                    arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
+                    intArrayOf(
+                        Color.argb(90, Color.red(colorScheme.primary), Color.green(colorScheme.primary), Color.blue(colorScheme.primary)),
+                        colorScheme.inputBackground
+                    )
+                )
                 setOnCheckedChangeListener { _, checked -> set(checked) }
             })
         }
@@ -423,6 +590,9 @@ class MainActivity : AppCompatActivity() {
         addView(Slider(this@MainActivity).apply {
             valueFrom = from
             valueTo = to
+            thumbTintList = ColorStateList.valueOf(colorScheme.primary)
+            trackActiveTintList = ColorStateList.valueOf(colorScheme.primary)
+            trackInactiveTintList = ColorStateList.valueOf(colorScheme.inputBackground)
             if (step > 0f) {
                 stepSize = step
             }
@@ -440,7 +610,7 @@ class MainActivity : AppCompatActivity() {
     private fun label012(): TextView = TextView(this).apply {
         text = "0 متحفظ · 1 متوازن · 2 سخي"
         textSize = 11f
-        alpha = 0.6f
+        setTextColor(colorScheme.textSecondary)
     }
 
     /** منتقي دوائر الثيمات الملونة */
@@ -469,7 +639,7 @@ class MainActivity : AppCompatActivity() {
                         textSize = 9.5f
                         maxLines = 1
                         gravity = Gravity.CENTER
-                        setTextColor(if (active) th.accent else Color.argb(190, 255, 255, 255))
+                        setTextColor(if (active) th.accent else colorScheme.textSecondary)
                     })
                     setOnClickListener {
                         prefs.updateActive { it.themeId = th.id }
@@ -496,9 +666,16 @@ class MainActivity : AppCompatActivity() {
                     setPadding(dp(14f).toInt(), dp(8f).toInt(), dp(14f).toInt(), dp(8f).toInt())
                     background = GradientDrawable().apply {
                         cornerRadius = dp(18f)
-                        setColor(if (active) Color.argb(70, 167, 139, 250) else Color.argb(28, 128, 128, 128))
-                        setStroke(if (active) dp(1.5f).toInt() else 0, Color.rgb(167, 139, 250))
+                        if (active) {
+                            val alpha = if (colorScheme.isDark) 70 else 35
+                            setColor(Color.argb(alpha, Color.red(colorScheme.primary), Color.green(colorScheme.primary), Color.blue(colorScheme.primary)))
+                            setStroke(dp(1.5f).toInt(), colorScheme.primary)
+                        } else {
+                            setColor(colorScheme.chipInactiveBackground)
+                            setStroke(dp(1f).toInt(), colorScheme.divider)
+                        }
                     }
+                    setTextColor(if (active) colorScheme.primary else colorScheme.chipInactiveText)
                     val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                     lp.marginEnd = dp(6f).toInt()
                     layoutParams = lp
@@ -549,7 +726,7 @@ class MainActivity : AppCompatActivity() {
             addView(TextView(this@MainActivity).apply {
                 text = "لا تتوفر ألوان خلفية للمعاينة بعد — جرّب بعد تغيير الخلفية"
                 textSize = 12f
-                alpha = 0.6f
+                setTextColor(colorScheme.textSecondary)
             })
         } else {
             val names = listOf("أصلي", "ثانوي", "ثالث")
@@ -564,7 +741,7 @@ class MainActivity : AppCompatActivity() {
                         background = GradientDrawable().apply {
                             shape = GradientDrawable.OVAL
                             setColor(c)
-                            setStroke(dp(1f).toInt(), Color.argb(60, 255, 255, 255))
+                            setStroke(dp(1f).toInt(), colorScheme.divider)
                         }
                         layoutParams = LinearLayout.LayoutParams(dp(34f).toInt(), dp(34f).toInt())
                     })
@@ -572,14 +749,14 @@ class MainActivity : AppCompatActivity() {
                         text = names[i]
                         textSize = 10f
                         gravity = Gravity.CENTER
-                        alpha = 0.7f
+                        setTextColor(colorScheme.textSecondary)
                     })
                 })
             }
             addView(TextView(this@MainActivity).apply {
-                text = "ثيم اللوحة يتغير مع خلفيتك — فاتح وليلاً"
+                text = if (colorScheme.isDark) "مستخرج من خلفيتك (وضع داكن)" else "مستخرج من خلفيتك (وضع فاتح)"
                 textSize = 11f
-                alpha = 0.55f
+                setTextColor(colorScheme.textSecondary)
             })
         }
     }
@@ -613,8 +790,10 @@ class MainActivity : AppCompatActivity() {
             textSize = 14f
             inputType = InputType.TYPE_CLASS_TEXT
             setSingleLine(true)
+            setTextColor(colorScheme.textPrimary)
+            setHintTextColor(colorScheme.textSecondary)
             background = GradientDrawable().apply {
-                setColor(Color.argb(30, 128, 128, 128))
+                setColor(colorScheme.inputBackground)
                 cornerRadius = dp(10f)
             }
             setPadding(dp(12f).toInt(), dp(9f).toInt(), dp(12f).toInt(), dp(9f).toInt())
@@ -630,8 +809,10 @@ class MainActivity : AppCompatActivity() {
 
     /* ================= التحديثات الديناميكية ================= */
     private fun refreshStatus() {
+        if (!::statusText.isInitialized) return
         val enabled = imeEnabled()
         val selected = imeSelected()
+        statusText.setTextColor(colorScheme.textPrimary)
         statusText.text = when {
             selected -> "✅ لوحة Onyx مفعّلة ومختارة — اضغط أي حقل نصي للبدء"
             enabled -> "🟡 مفعّلة في النظام لكن غير مختارة — اضغط «اختيار Onyx الآن»"
@@ -640,8 +821,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshStats() {
+        if (!::statsText.isInitialized) return
         val p = prefs.active
         val learned = p.learnedTsv.lineCount { it.isNotBlank() }
+        statsText.setTextColor(colorScheme.textSecondary)
         statsText.text = "ضغطات: ${p.keystrokes} · كلمات: ${p.words} · تصحيحات: ${p.fixes}\n" +
             "قاموسك المتعلم: $learned كلمة · الملف: ${p.avatar} ${p.name}"
     }
@@ -657,9 +840,16 @@ class MainActivity : AppCompatActivity() {
                 setPadding(dp(12f).toInt(), dp(8f).toInt(), dp(12f).toInt(), dp(8f).toInt())
                 background = GradientDrawable().apply {
                     cornerRadius = dp(18f)
-                    setColor(if (active) Color.argb(70, 167, 139, 250) else Color.argb(28, 128, 128, 128))
-                    setStroke(if (active) dp(1.5f).toInt() else 0, Color.rgb(167, 139, 250))
+                    if (active) {
+                        val alpha = if (colorScheme.isDark) 70 else 35
+                        setColor(Color.argb(alpha, Color.red(colorScheme.primary), Color.green(colorScheme.primary), Color.blue(colorScheme.primary)))
+                        setStroke(dp(1.5f).toInt(), colorScheme.primary)
+                    } else {
+                        setColor(colorScheme.chipInactiveBackground)
+                        setStroke(dp(1f).toInt(), colorScheme.divider)
+                    }
                 }
+                setTextColor(if (active) colorScheme.primary else colorScheme.chipInactiveText)
                 val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                 lp.marginEnd = dp(6f).toInt()
                 layoutParams = lp
@@ -707,4 +897,291 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun String.lineCount(pred: (String) -> Boolean): Int = split("\n").count(pred)
+
+    /* ================= استيراد القواميس عبر رابط (URL) مع كشف الحافظة ================= */
+
+    private fun urlImportSection(initialUrl: String? = null): MaterialCardView {
+        return section("استيراد وتنزيل عبر رابط 🌐 (URL)") {
+            addView(TextView(this@MainActivity).apply {
+                text = "أدخل رابط ملف قاموس (.tsv أو نصي) لتنزيل الكلمات وفحص أمان الرابط. عند فتح التطبيق، يتم رصد أي رابط في الحافظة وتعبئته تلقائياً."
+                textSize = 12f
+                setTextColor(colorScheme.textSecondary)
+                setPadding(0, 0, 0, dp(6f).toInt())
+            })
+
+            // شارة رصد رابط من الحافظة
+            clipboardDetectedBadge = LinearLayout(this@MainActivity).apply {
+                orientation = LinearLayout.VERTICAL
+                visibility = if (lastPrefilledUrl != null) View.VISIBLE else View.GONE
+                background = GradientDrawable().apply {
+                    cornerRadius = dp(12f)
+                    val bgAlpha = if (colorScheme.isDark) 45 else 30
+                    setColor(Color.argb(bgAlpha, Color.red(colorScheme.primary), Color.green(colorScheme.primary), Color.blue(colorScheme.primary)))
+                    setStroke(dp(1f).toInt(), colorScheme.primary)
+                }
+                setPadding(dp(12f).toInt(), dp(8f).toInt(), dp(12f).toInt(), dp(8f).toInt())
+                val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                lp.bottomMargin = dp(8f).toInt()
+                layoutParams = lp
+
+                val badgeHeader = LinearLayout(this@MainActivity).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    gravity = Gravity.CENTER_VERTICAL
+                    addView(TextView(this@MainActivity).apply {
+                        text = "📋 تم رصد رابط في الحافظة وملء الحقل تلقائياً"
+                        textSize = 12f
+                        typeface = Typeface.DEFAULT_BOLD
+                        setTextColor(colorScheme.primary)
+                        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                    })
+                    addView(TextView(this@MainActivity).apply {
+                        text = "إغلاق ✕"
+                        textSize = 11f
+                        setTextColor(colorScheme.textSecondary)
+                        setPadding(dp(6f).toInt(), dp(2f).toInt(), dp(6f).toInt(), dp(2f).toInt())
+                        setOnClickListener {
+                            clipboardDetectedBadge.visibility = View.GONE
+                        }
+                    })
+                }
+                addView(badgeHeader)
+
+                clipboardBadgeText = TextView(this@MainActivity).apply {
+                    text = lastPrefilledUrl ?: ""
+                    textSize = 11.5f
+                    setTextColor(colorScheme.textPrimary)
+                    maxLines = 1
+                    ellipsize = android.text.TextUtils.TruncateAt.MIDDLE
+                    setPadding(0, dp(2f).toInt(), 0, 0)
+                }
+                addView(clipboardBadgeText)
+            }
+            addView(clipboardDetectedBadge)
+
+            // حقل إدخال الرابط
+            urlInputField = EditText(this@MainActivity).apply {
+                hint = "https://example.com/dictionaries/arabic.tsv"
+                textSize = 13.5f
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
+                setSingleLine(true)
+                setTextColor(colorScheme.textPrimary)
+                setHintTextColor(colorScheme.textSecondary)
+                background = GradientDrawable().apply {
+                    setColor(colorScheme.inputBackground)
+                    cornerRadius = dp(10f)
+                    setStroke(dp(1f).toInt(), colorScheme.divider)
+                }
+                setPadding(dp(12f).toInt(), dp(10f).toInt(), dp(12f).toInt(), dp(10f).toInt())
+                val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                lp.bottomMargin = dp(6f).toInt()
+                layoutParams = lp
+                val prefill = initialUrl ?: lastPrefilledUrl
+                if (!prefill.isNullOrBlank()) {
+                    setText(prefill)
+                    setSelection(prefill.length)
+                }
+            }
+            addView(urlInputField)
+
+            // نص حالة الرابط والتحقق
+            urlStatusText = TextView(this@MainActivity).apply {
+                textSize = 12f
+                setTextColor(colorScheme.textSecondary)
+                setPadding(dp(4f).toInt(), dp(4f).toInt(), dp(4f).toInt(), dp(6f).toInt())
+                text = "💡 الصق أو اكتب رابطاً، أو انسخ رابطاً وافتح التطبيق للكشف الفوري"
+            }
+            addView(urlStatusText)
+
+            // أزرار العمليات
+            addView(buttonRow(
+                button("تنزيل واستيراد 📥") {
+                    val url = urlInputField.text.toString().trim()
+                    downloadAndImportDictionary(url)
+                },
+                button("فحص الأمان 🛡️") {
+                    val url = urlInputField.text.toString().trim()
+                    validateUrlField(url)
+                }
+            ))
+
+            addView(buttonRow(
+                button("لصق من الحافظة 📋") {
+                    pasteFromClipboardManually()
+                },
+                button("مسح الحقل ✕") {
+                    urlInputField.setText("")
+                    lastPrefilledUrl = null
+                    clipboardDetectedBadge.visibility = View.GONE
+                    urlStatusText.text = "تم مسح حقل الرابط"
+                    urlStatusText.setTextColor(colorScheme.textSecondary)
+                }
+            ))
+        }
+    }
+
+    /**
+     * فحص الحافظة تلقائياً عند فتح التطبيق واستخراج الرابط وملء حقل الإدخال
+     */
+    fun detectAndPrefillClipboardUrl(): Boolean {
+        if (!::urlInputField.isInitialized) return false
+        return try {
+            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager ?: return false
+            if (!clipboard.hasPrimaryClip()) return false
+            val clip = clipboard.primaryClip ?: return false
+            if (clip.itemCount == 0) return false
+            val text = clip.getItemAt(0).coerceToText(this)?.toString() ?: return false
+            val detectedUrl = ClipboardUrlDetector.extractUrl(text) ?: return false
+
+            val currentText = urlInputField.text.toString().trim()
+            if (currentText.isEmpty() || currentText == lastPrefilledUrl) {
+                if (currentText != detectedUrl) {
+                    urlInputField.setText(detectedUrl)
+                    urlInputField.setSelection(detectedUrl.length)
+                    lastPrefilledUrl = detectedUrl
+                    showClipboardBadge(detectedUrl)
+                    validateUrlField(detectedUrl)
+                    return true
+                }
+            }
+            false
+        } catch (e: Throwable) {
+            android.util.Log.e("OnyxMainActivity", "Error reading clipboard", e)
+            false
+        }
+    }
+
+    private fun showClipboardBadge(url: String) {
+        if (!::clipboardDetectedBadge.isInitialized || !::clipboardBadgeText.isInitialized) return
+        clipboardBadgeText.text = url
+        clipboardDetectedBadge.visibility = View.VISIBLE
+    }
+
+    private fun validateUrlField(url: String) {
+        if (url.isBlank()) {
+            urlStatusText.text = "⚠️ الرجاء إدخال رابط أولاً"
+            urlStatusText.setTextColor(Color.rgb(255, 149, 0))
+            return
+        }
+        val result = DownloadUrlValidator.validate(url)
+        if (result.isValid && result is DownloadUrlValidator.ValidationResult.Valid) {
+            urlStatusText.text = "✅ الرابط آمن وصالح:\n• النطاق: ${result.host}\n• البروتوكول: ${result.scheme.uppercase()}\n• فحص SSRF وتفادي المسارات: سليم"
+            urlStatusText.setTextColor(Color.rgb(52, 199, 89))
+        } else if (result is DownloadUrlValidator.ValidationResult.Invalid) {
+            urlStatusText.text = "❌ رابط غير صالح أو غير آمن:\n${result.reason}"
+            urlStatusText.setTextColor(Color.rgb(255, 69, 58))
+        }
+    }
+
+    private fun pasteFromClipboardManually() {
+        try {
+            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+            val clip = clipboard?.primaryClip
+            if (clip != null && clip.itemCount > 0) {
+                val text = clip.getItemAt(0).coerceToText(this)?.toString()
+                val url = ClipboardUrlDetector.extractUrl(text)
+                if (url != null) {
+                    urlInputField.setText(url)
+                    urlInputField.setSelection(url.length)
+                    lastPrefilledUrl = url
+                    showClipboardBadge(url)
+                    validateUrlField(url)
+                    toast("تم استخراج الرابط من الحافظة بنجاح")
+                } else if (!text.isNullOrBlank()) {
+                    toast("النص المنسوخ لا يحتوي على رابط صالح")
+                    urlStatusText.text = "⚠️ النص الموجود في الحافظة ليس رابطاً صالحاً"
+                    urlStatusText.setTextColor(Color.rgb(255, 149, 0))
+                } else {
+                    toast("الحافظة فارغة")
+                }
+            } else {
+                toast("الحافظة فارغة")
+            }
+        } catch (e: Throwable) {
+            toast("تعذر الوصول إلى الحافظة")
+        }
+    }
+
+    private fun downloadAndImportDictionary(url: String) {
+        if (url.isBlank()) {
+            toast("الرجاء إدخال رابط القاموس أولاً")
+            return
+        }
+        val validation = DownloadUrlValidator.validate(url)
+        if (!validation.isValid) {
+            val reason = (validation as? DownloadUrlValidator.ValidationResult.Invalid)?.reason ?: "رابط غير صالح"
+            urlStatusText.text = "❌ فشل فحص الأمان: $reason"
+            urlStatusText.setTextColor(Color.rgb(255, 69, 58))
+            toast("رابط غير آمن أو غير صالح")
+            return
+        }
+
+        urlStatusText.text = "⏳ جارٍ تنزيل ملف القاموس وفحصه..."
+        urlStatusText.setTextColor(colorScheme.primary)
+        toast("جارٍ التنزيل من الرابط...")
+
+        Thread {
+            try {
+                val conn = java.net.URL(url).openConnection() as java.net.HttpURLConnection
+                conn.connectTimeout = 10000
+                conn.readTimeout = 15000
+                conn.instanceFollowRedirects = true
+                conn.requestMethod = "GET"
+                conn.setRequestProperty("User-Agent", "OnyxKeyboard/0.7.5")
+
+                val responseCode = conn.responseCode
+                if (responseCode !in 200..299) {
+                    runOnUiThread {
+                        urlStatusText.text = "❌ خطأ في الخادم (رمز $responseCode): تعذر تنزيل الملف"
+                        urlStatusText.setTextColor(Color.rgb(255, 69, 58))
+                        toast("خطأ الخادم: $responseCode")
+                    }
+                    return@Thread
+                }
+
+                val text = conn.inputStream.bufferedReader().use { it.readText() }
+                conn.disconnect()
+
+                val counts = HashMap<String, Int>()
+                for (l in prefs.active.learnedTsv.lines()) {
+                    val p = l.split("\t")
+                    if (p.size >= 2 && p[0].trim().length >= 2) {
+                        counts[p[0].trim()] = p[1].trim().toIntOrNull()?.coerceIn(1, 99) ?: 1
+                    }
+                }
+                var imported = 0
+                for (l in text.lines()) {
+                    val p = l.split("\t")
+                    val w = p.getOrNull(0)?.trim() ?: ""
+                    val c = p.getOrNull(1)?.trim()?.toIntOrNull()?.coerceIn(1, 99) ?: 1
+                    if (w.length >= 2 && !w.contains(' ')) {
+                        counts[w] = maxOf(counts[w] ?: 0, c)
+                        imported++
+                    }
+                }
+
+                runOnUiThread {
+                    if (imported > 0) {
+                        val sb = StringBuilder()
+                        for ((w, c) in counts) sb.append(w).append('\t').append(c).append('\n')
+                        prefs.updateActive { it.learnedTsv = sb.toString() }
+                        urlStatusText.text = "✅ تم بنجاح! تم دمج $imported كلمة من الرابط في قاموسك المتعلم (${prefs.active.name})"
+                        urlStatusText.setTextColor(Color.rgb(52, 199, 89))
+                        toast("تم استيراد $imported كلمة بنجاح ✅")
+                        refreshStats()
+                    } else {
+                        urlStatusText.text = "⚠️ تم تنزيل الملف ولكن لم يتم العثور على كلمات صالحة (صيغة كلمة أو كلمة [tab] تكرار)"
+                        urlStatusText.setTextColor(Color.rgb(255, 149, 0))
+                        toast("لم يُعثر على كلمات صالحة في الملف")
+                    }
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    val msg = e.localizedMessage ?: e.javaClass.simpleName
+                    urlStatusText.text = "❌ فشل الاتصال بالرابط: $msg"
+                    urlStatusText.setTextColor(Color.rgb(255, 69, 58))
+                    toast("تعذر التنزيل: $msg")
+                }
+            }
+        }.start()
+    }
 }

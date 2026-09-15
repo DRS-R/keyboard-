@@ -68,6 +68,9 @@ android {
   buildFeatures {
     buildConfig = true
   }
+  testOptions {
+    unitTests.isReturnDefaultValues = true
+  }
   dependenciesInfo {
     includeInApk = false
     includeInBundle = true

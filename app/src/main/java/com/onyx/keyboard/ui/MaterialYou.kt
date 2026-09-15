@@ -71,7 +71,7 @@ object MaterialYou {
     /* ================= اشتقاق اللوحة اللونية ================= */
 
     /** تثبيت قيمة الإضاءة V في HSV مع تهدئة التشبع قليلاً */
-    private fun withV(color: Int, v: Float, satMul: Float = 0.92f): Int {
+    fun withV(color: Int, v: Float, satMul: Float = 0.92f): Int {
         val hsv = FloatArray(3)
         Color.colorToHSV(color, hsv)
         hsv[1] = (hsv[1] * satMul).coerceIn(0f, 1f)
@@ -79,14 +79,14 @@ object MaterialYou {
         return Color.HSVToColor(hsv)
     }
 
-    private fun vOf(color: Int): Float {
+    fun vOf(color: Int): Float {
         val hsv = FloatArray(3)
         Color.colorToHSV(color, hsv)
         return hsv[2]
     }
 
     /** نسبة تباين تقريبية (WCAG مبسطة) لضمان قراءة نص الإبراز */
-    private fun contrast(a: Int, b: Int): Float {
+    fun contrast(a: Int, b: Int): Float {
         fun lum(c: Int): Float {
             fun ch(v: Int): Float {
                 val s = v / 255f

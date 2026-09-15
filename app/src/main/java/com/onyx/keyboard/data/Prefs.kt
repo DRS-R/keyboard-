@@ -173,6 +173,16 @@ class Prefs(context: Context) {
         get() = sp.getInt(KEY_ONEHANDED, 0)
         set(v) = sp.edit().putInt(KEY_ONEHANDED, v.coerceIn(0, 2)).apply()
 
+    /** مظهر واجهة التطبيق: 0 تلقائي مع النظام، 1 وضع فاتح، 2 وضع داكن */
+    var appThemeMode: Int
+        get() = sp.getInt(KEY_APP_THEME_MODE, THEME_MODE_SYSTEM)
+        set(v) = sp.edit().putInt(KEY_APP_THEME_MODE, v.coerceIn(0, 2)).apply()
+
+    /** الألوان الديناميكية لواجهة التطبيق (Material You من خلفية الجهاز) */
+    var appDynamicColor: Boolean
+        get() = sp.getBoolean(KEY_APP_DYNAMIC_COLOR, true)
+        set(v) = sp.edit().putBoolean(KEY_APP_DYNAMIC_COLOR, v).apply()
+
     /* ------- تعديل الملف الحالي ------- */
     fun updateActive(transform: (Profile) -> Unit) {
         val p = active
@@ -277,6 +287,12 @@ class Prefs(context: Context) {
         private const val KEY_FLOAT_SCALE = "floatScale"
         private const val KEY_GRAMMAR = "grammarChipEnabled"
         private const val KEY_ONEHANDED = "oneHanded"
+        private const val KEY_APP_THEME_MODE = "appThemeMode"
+        private const val KEY_APP_DYNAMIC_COLOR = "appDynamicColor"
+
+        const val THEME_MODE_SYSTEM = 0
+        const val THEME_MODE_LIGHT = 1
+        const val THEME_MODE_DARK = 2
 
         val AVATARS = listOf("😈", "🦁", "🦅", "🐉", "🚀", "🌙", "⭐", "🦉", "🐺", "👑", "🔥", "💎", "🧠", "🤖", "🌸", "🦋")
 
